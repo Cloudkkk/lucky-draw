@@ -1,0 +1,273 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<title>LUCKY</title>
+	<link rel="stylesheet" type="text/css" href="bootstrap.min.css" />
+	<script type="text/javascript" src="jquery-3.3.1.min.js"></script>
+	<script type="text/javascript" src="sweetalert.min.js"></script>
+
+	<style>
+		.card {
+			-webkit-transition: all 1s linear;
+			-moz-transition: all 1s linear;
+			-o-transition: all 1s linear;
+			transition: all 1s linear;
+		}
+
+		.num {
+			width: 3em;
+			height: 2em;
+			font-size: 3em;
+			margin: 3px;
+		}
+
+		#topic {
+			height: 100px;
+			text-align: center;
+			margin: auto;
+			font-size: 60px;
+			font-family: KaiTi;
+
+		}
+
+		/* #p1 {
+			height: 300px;
+			width: 200px;
+			position: absolute;
+			top: 150px;
+			left: 100px;
+			background: url(logo.jpg) no-repeat;
+			background-size: 100%;
+			z-index: 999;
+		}
+
+		#p2 {
+			height: 300px;
+			width: 200px;
+			position: absolute;
+			top: 400px;
+			left: 100px;
+			background: url(jpyt.jpg) no-repeat;
+			background-size: 100%;
+			z-index: 999;
+		}
+
+		#p3 {
+			height: 300px;
+			width: 400px;
+			position: absolute;
+			top: 200px;
+			right: 00px;
+			background: url(jinzhu1.png) no-repeat;
+			background-size: 100%;
+			z-index: 999;
+		}
+
+		#p4 {
+			height: 300px;
+			width: 200px;
+			position: absolute;
+			top: 400px;
+			right: 100px;
+			background: url(jinzhu.jpg) no-repeat;
+			background-size: 100%;
+			z-index: 999;
+		}
+ */
+
+		.container {
+
+			position: relative;
+		}
+
+		#sp1 {
+
+			float: right;
+		}
+
+		#sp2 {
+			float: right;
+
+		}
+
+		#sp3 {
+			float: right;
+
+		}
+	</style>
+</head>
+
+<body>
+
+	<div class="top">
+		<div id="topic">XXXX抽奖</div>
+		<!-- 广告，外联图片 -->
+		<!-- <div id="p1"></div>
+		<div id="p2"></div>
+		<div id="p3"></div>
+		<div id="p4"></div> -->        
+	</div>
+	<br />
+	<br />
+	<div class="container">
+		<div class="card border-success mb-3">
+			<div class="card-header">三等奖<span id="sp1"><button type="button" class="btn btn-outline-secondary"
+						onclick="newOne();">三等奖轮空</button></span></div>
+			<div class="card-body">
+				<h5 class="card-title">获奖序号</h5>
+			</div>
+		</div>
+		<div class="card border-success mb-3">
+			<div class="card-header">二等奖<span id="sp2"><button type="button" class="btn btn-outline-secondary"
+						onclick="newTwo();">二等奖轮空</button></span></div>
+			<div class="card-body">
+				<h5 class="card-title">获奖序号</h5>
+			</div>
+		</div>
+		<div class="card border-success mb-3">
+			<div class="card-header">一等奖<span id="sp3"><button type="button" class="btn btn-outline-secondary"
+						onclick="newThree();">一等奖轮空</button></span></div>
+			<div class="card-body">
+				<h5 class="card-title">获奖序号</h5>
+			</div>
+		</div>
+		<button type="button" class="btn btn-primary btn-lg btn-block" onclick="solve();">开 始 摇 号</button>
+		<!-- <audio src="1.mp3" autoplay="autoplay" loop="true"></audio>   BGM插入 -->
+
+
+
+
+	</div>
+
+	<script type="text/javascript">
+
+		$().ready(function () {
+			var ele = [];
+			var con1 = $(".card-body:eq(0)");
+			var con2 = $(".card-body:eq(1)");
+			var con3 = $(".card-body:eq(2)");
+			var num1 = 3; // 三等奖数量
+			var num2 = 2; // 二等奖数量
+			var num3 = 1; // 一等奖数量
+			var total = 0;
+			var temp;
+			//轮空
+			window.newOne = function () {
+				num1++; //三等奖++
+				console.log("1++");
+			}
+			window.newTwo = function () {
+				num2++; //2等奖++
+			}
+			window.newThree = function () {
+				num3++;//1等奖++
+			}
+			swal({
+				title: '输入总人数',
+				input: 'text',
+				showCancelButton: true,
+				inputValidator: function (value) {
+					return new Promise(function (resolve, reject) {
+						if (value > 0) {
+							resolve()
+						} else {
+							swal('非法数值', '请刷新页面并重新输入，否则页面功能将不可用', 'error').then(function () {
+								reject('请输入合理的数值');
+							})
+						}
+					})
+				}
+			}).then(function (result) {
+				total = result.value;
+				console.log(total);
+			})
+
+			window.solve = function () {
+				var now;
+				///  消除等待时间 ////  从这开始删除
+				swal({
+					title: '摇号中',
+					text: '敬请期待',
+					showConfirmButton: false,
+					allowOutsideClick: false,
+					imageUrl: 'loading.gif',
+					imageHeight: 200,
+					timer: 230 // 一次抽奖的时间
+				}).then(function () { /// 删到这里
+					now = getOne();
+					
+
+					if (num1 + num2 + num3 <= 0) {
+						swal("T_T", "木有名额了", "error");
+					} else {
+						if (num1 > 0) {
+							var node = $("<h1 class='num btn btn-success'>" + now + "</h1>")
+							swal("三等奖中奖号码为：" + now + "!").then(function () {
+								num1--;
+								con1.append(node);
+							}
+							)
+						} else if (num2 > 0) {
+							swal("二等奖中奖号码为：" + now + "!").then(function () {
+								var node = $("<h1 class='num btn btn-success'>" + now + "</h1>")
+								num2--;
+								con2.append(node);
+							})
+						} else if (num3 > 0) {
+							swal("一等奖中奖号码为：" + now + "!").then(function () {
+								var node = $("<h1 class='num btn btn-success'>" + now + "</h1>")
+								num3--;
+								con3.append(node);
+							})
+						}
+
+
+
+
+
+
+
+						/**swal("中奖号码为：" + now + "!").then(function () {
+							var node = $("<h1 class='num btn btn-success'>" + now + "</h1>")
+							
+							if (num1 > 0) {
+								num1--;
+								con1.append(node);
+							} else if (num2 > 0) {
+								num2--;
+								con2.append(node);
+							} else if (num3 > 0) {
+								num3--;
+								con3.append(node);
+								
+							}
+						});*/
+					}
+				});  /// 去掉这行
+			}
+
+			var getOne = function () {
+				temp = rand(total) + 1;
+				if (ele.every(function (now) {
+					return now !== temp;
+				})) {
+
+					ele.push(temp);
+				
+
+				} else {
+					return arguments.callee();
+				}
+				return temp;
+			}
+
+			var rand = function (max) { // 生成[0, max)的随机正数
+				return Math.floor(Math.random() * max) % max;
+			}
+		})
+	</script>
+</body>
+
+</html>
